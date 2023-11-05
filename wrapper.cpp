@@ -1,6 +1,6 @@
 /* wrapper.cpp */
 #include "wrapper.h"
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/interprocess/detail/atomic.hpp>
 #include <iostream>
@@ -77,7 +77,8 @@ void Acceptor::StartTimer()
 {
 	m_last_time = boost::posix_time::microsec_clock::local_time();
 	m_timer.expires_from_now(boost::posix_time::milliseconds(m_timer_interval));
-	m_timer.async_wait(m_io_strand.wrap(boost::bind(&Acceptor::HandleTimer, shared_from_this(), _1)));
+    m_timer.async_wait(m_io_strand.wrap(boost::bind(
+        &Acceptor::HandleTimer, shared_from_this(), boost::placeholders::_1)));
 }
 
 // Acceptor::StartError definition
@@ -96,7 +97,10 @@ void Acceptor::StartError( const boost::system::error_code &error)
 // Acceptor::DispatchAccept definition
 void Acceptor::DispatchAccept(boost::shared_ptr<Connection> connection)
 {
-	m_acceptor.async_accept(connection->GetSocket(), connection->GetStrand().wrap(boost::bind(&Acceptor::HandleAccept, shared_from_this(), _1, connection)));
+    m_acceptor.async_accept(connection->GetSocket(),
+                            connection->GetStrand().wrap(boost::bind(
+                                &Acceptor::HandleAccept, shared_from_this(),
+                                boost::placeholders::_1, connection)));
 }
 
 // Acceptor::HandleTimer definition
@@ -249,13 +253,21 @@ void Connection::StartRecv(int32_t total_bytes)
 	if(total_bytes > 0)
 	{
 		m_recv_buffer.resize(total_bytes);
-		boost::asio::async_read(m_socket, boost::asio::buffer(m_recv_buffer), m_io_strand.wrap(boost::bind(&Connection::HandleRecv, shared_from_this(), _1, _2)));
-	}
+        boost::asio::async_read(
+            m_socket, boost::asio::buffer(m_recv_buffer),
+            m_io_strand.wrap(
+                boost::bind(&Connection::HandleRecv, shared_from_this(),
+                            boost::placeholders::_1, boost::placeholders::_2)));
+    }
 	else
 	{
 		m_recv_buffer.resize(m_receive_buffer_size);
-		m_socket.async_read_some(boost::asio::buffer(m_recv_buffer), m_io_strand.wrap(boost::bind(&Connection::HandleRecv, shared_from_this(), _1, _2)));
-	}
+        m_socket.async_read_some(
+            boost::asio::buffer(m_recv_buffer),
+            m_io_strand.wrap(
+                boost::bind(&Connection::HandleRecv, shared_from_this(),
+                            boost::placeholders::_1, boost::placeholders::_2)));
+    }
 }
 
 // Connection::StartTimer definition
@@ -263,7 +275,9 @@ void Connection::StartTimer()
 {
 	m_last_time = boost::posix_time::microsec_clock::local_time();
 	m_timer.expires_from_now(boost::posix_time::milliseconds(m_timer_interval));
-	m_timer.async_wait(m_io_strand.wrap(boost::bind(&Connection::DispatchTimer, shared_from_this(), _1)));
+    m_timer.async_wait(m_io_strand.wrap(boost::bind(&Connection::DispatchTimer,
+                                                    shared_from_this(),
+                                                    boost::placeholders::_1)));
 }
 
 // Connection::StartError definition
@@ -372,8 +386,11 @@ void Connection::Connect(const std::string & addr, uint8_t channel)
 	boost::system::error_code ec;
 
 	boost::asio::bluetooth::bluetooth::endpoint endpoint(addr, channel);
-	m_socket.async_connect(endpoint, m_io_strand.wrap(boost::bind(&Connection::HandleConnect, shared_from_this(), _1)));
-	StartTimer();
+    m_socket.async_connect(
+        endpoint, m_io_strand.wrap(boost::bind(&Connection::HandleConnect,
+                                               shared_from_this(),
+                                               boost::placeholders::_1)));
+    StartTimer();
 }
 
 // Connection::Disconnect definition

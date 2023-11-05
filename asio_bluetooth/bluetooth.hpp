@@ -10,7 +10,6 @@
 
 
 #include <boost/asio/basic_socket_acceptor.hpp>
-#include <boost/asio/socket_acceptor_service.hpp>
 #include <boost/asio/basic_socket_iostream.hpp>
 #include <boost/asio/basic_stream_socket.hpp>
 #include <boost/asio/detail/socket_option.hpp>
