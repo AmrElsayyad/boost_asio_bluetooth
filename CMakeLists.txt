@@ -16,7 +16,7 @@ IF(NOT CMAKE_BUILD_TYPE)
 ENDIF()
 
 # Find boost
-find_package(Boost REQUIRED system thread)
+find_package(Boost REQUIRED system thread program_options)
 if (Boost_FOUND)
     INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
     LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
