@@ -153,37 +153,31 @@ void Acceptor::Accept(boost::shared_ptr<Connection> connection)
 	m_io_strand.post(boost::bind(&Acceptor::DispatchAccept, shared_from_this(), connection));
 }
 
-// Acceptor::Listen definition
+// Acceptor::Listen definition with endpoint
+void Acceptor::Listen(const boost::asio::bluetooth::bluetooth::endpoint &endpoint)
+{
+    m_acceptor.open(endpoint.protocol());
+    m_acceptor.bind(endpoint);
+    m_acceptor.listen();
+    StartTimer();
+}
+
+// Acceptor::Listen definition with MAC address and channel
 void Acceptor::Listen(const std::string &mac_addr, const uint8_t & channel)
 {
-	boost::asio::bluetooth::bluetooth::endpoint endpoint(mac_addr, channel);
-	m_acceptor.open(endpoint.protocol());
-	//m_acceptor.set_option(boost::asio::ip::tcp::acceptor::reuse_address(false));
-	m_acceptor.bind(endpoint);
-	m_acceptor.listen(boost::asio::socket_base::max_connections);
-	StartTimer();
+	Listen(boost::asio::bluetooth::bluetooth::endpoint(mac_addr, channel));
 }
 
 // Acceptor::Listen definition [default]
 void Acceptor::Listen()
 {
-	boost::asio::bluetooth::bluetooth::endpoint endpoint;
-	m_acceptor.open(endpoint.protocol());
-	//m_acceptor.set_option(boost::asio::ip::tcp::acceptor::reuse_address(false));
-	m_acceptor.bind(endpoint);
-	m_acceptor.listen(boost::asio::socket_base::max_connections);
-	StartTimer();
+	Listen(boost::asio::bluetooth::bluetooth::endpoint());
 }
 
-// Acceptor::Listen definition [default]
+// Acceptor::Listen definition with channel
 void Acceptor::Listen(uint8_t channel)
 {
-	boost::asio::bluetooth::bluetooth::endpoint endpoint(channel);
-	m_acceptor.open(endpoint.protocol());
-	//m_acceptor.set_option(boost::asio::ip::tcp::acceptor::reuse_address(false));
-	m_acceptor.bind(endpoint);
-	m_acceptor.listen(boost::asio::socket_base::max_connections);
-	StartTimer();
+	Listen(boost::asio::bluetooth::bluetooth::endpoint(channel));
 }
 
 // Acceptor::GetHive definition

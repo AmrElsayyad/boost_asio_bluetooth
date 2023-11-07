@@ -131,6 +131,9 @@ public:
 	bool HasError();
 
 public:
+	// Listen default implementation
+	void Listen(const boost::asio::bluetooth::bluetooth::endpoint &endpoint);
+
 	// Begin listening on the specific bluetooth interface.
 	void Listen(const std::string &host, const boost::uint8_t &port);
 
