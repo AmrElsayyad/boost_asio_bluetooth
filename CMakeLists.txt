@@ -24,12 +24,8 @@ if (Boost_FOUND)
 else(Boost_FOUND)
         message(FATAL_ERROR "Boost not found")
 endif()
-# Find bluetooth
-find_library(bluetooth_LIBS NAMES bluetooth PATHS /usr/lib/ /usr/lib/x86_64-linux-gnu)
-IF(NOT bluetooth_LIBS)
-    message(FATAL_ERROR "Could not find bluetooth library. Please install libbluetooth-dev library.")
-ENDIF()
-SET(REQUIRED_LIBRARIES ${Boost_LIBRARIES} ${bluetooth_LIBS} pthread Boost::program_options)
+
+SET(REQUIRED_LIBRARIES ${Boost_LIBRARIES} pthread Boost::program_options)
 
 MESSAGE(STATUS "REQUIRED_LIBRARIES=${REQUIRED_LIBRARIES}")
 

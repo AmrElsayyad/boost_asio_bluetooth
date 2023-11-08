@@ -72,7 +72,13 @@ public:
     char addr[18];
     memcpy(addr, mac_addr.c_str(), 17);
     addr[17] = 0;
-    str2ba( addr, &data_.bt.rc_bdaddr );
+    std::istringstream ss(addr);
+    for (int i = 0; i < 6; i++) {
+        int x;
+        ss >> std::hex >> x;
+        data_.bt.rc_bdaddr.b[i] = static_cast<uint8_t>(x);
+        if (i < 5) ss.ignore(1); // skip the colon
+    }
     data_.bt.rc_channel = (uint8_t) channel;
 
     mac_ = mac_addr;
