@@ -31,10 +31,13 @@ IF(NOT bluetooth_LIBS)
 ENDIF()
 SET(REQUIRED_LIBRARIES ${Boost_LIBRARIES} ${bluetooth_LIBS} pthread Boost::program_options)
 
-
 MESSAGE(STATUS "REQUIRED_LIBRARIES=${REQUIRED_LIBRARIES}")
-add_executable(echo_server echoserver.cpp wrapper.cpp)
-target_link_libraries(echo_server ${REQUIRED_LIBRARIES})
 
-add_executable(echo_client echoclient.cpp wrapper.cpp)
-target_link_libraries(echo_client ${REQUIRED_LIBRARIES})
+add_library(boost_asio_bluetooth STATIC wrapper.cpp)
+target_link_libraries(boost_asio_bluetooth ${REQUIRED_LIBRARIES})
+
+add_executable(echo_server echoserver.cpp)
+target_link_libraries(echo_server boost_asio_bluetooth)
+
+add_executable(echo_client echoclient.cpp)
+target_link_libraries(echo_client boost_asio_bluetooth)
