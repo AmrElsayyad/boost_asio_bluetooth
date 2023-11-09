@@ -17,9 +17,6 @@
 // Bluetooth endpoint implementation
 #include "basic_endpoint.hpp"
 
-#include <bluetooth/bluetooth.h>
-#include <bluetooth/rfcomm.h>
-
 
 #include <boost/asio/detail/push_options.hpp>
 
@@ -32,6 +29,9 @@ namespace bluetooth {
  *
  *
  */
+
+#define BTPROTO_RFCOMM	3
+
 class bluetooth
 {
 public:
