@@ -14,6 +14,8 @@
 
 #include "asio_bluetooth/bluetooth.hpp"
 
+static constexpr const unsigned int BUFFER_SIZE = 8192;
+static constexpr const unsigned int TIMER_INTERVAL = 1;
 
 // Class declaration
 class Hive;

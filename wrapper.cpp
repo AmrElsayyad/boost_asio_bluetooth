@@ -6,7 +6,6 @@
 #include <boost/lexical_cast.hpp>
 #include <iostream>
 
-
 // Hive constructor
 Hive::Hive()
     : m_work_ptr(new boost::asio::io_service::work(m_io_service)),
@@ -53,7 +52,7 @@ Acceptor::Acceptor(boost::shared_ptr<Hive> hive)
       m_acceptor(hive->GetService()),
       m_io_strand(hive->GetService()),
       m_timer(hive->GetService()),
-      m_timer_interval(1000),
+      m_timer_interval(TIMER_INTERVAL),
       m_error_state(0) {}
 
 // Acceptor destructor
@@ -184,8 +183,8 @@ Connection::Connection(boost::shared_ptr<Hive> hive)
       m_socket(hive->GetService()),
       m_io_strand(hive->GetService()),
       m_timer(hive->GetService()),
-      m_receive_buffer_size(4096),
-      m_timer_interval(1000),
+      m_receive_buffer_size(BUFFER_SIZE),
+      m_timer_interval(TIMER_INTERVAL),
       m_error_state(0) {}
 
 // Connection destructor
