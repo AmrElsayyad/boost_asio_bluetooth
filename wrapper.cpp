@@ -270,7 +270,9 @@ void Connection::HandleConnect(const boost::system::error_code &error) {
 // Connection::HandleSend definition
 void Connection::HandleSend(const boost::system::error_code &error,
                             std::list<std::vector<uint8_t> >::iterator itr) {
+    std::cout << "Connection::HandleSend()" << std::endl;
     if (error || HasError() || m_hive->HasStopped()) {
+        std::cout << "Connection::HandleSend() has error" << std::endl;
         StartError(error);
     } else {
         OnSend(*itr);
